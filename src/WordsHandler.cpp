@@ -13,7 +13,7 @@ WordsHandler::WordsHandler()
 {
   marginFromBorder  = 10;
   marginFromWords   = 1;
-  font.load("Impact.ttf", 200, true, true, true);
+  font.load("HelveticaHv.ttf", 200, true, true, true);
   
 }
 
@@ -28,14 +28,31 @@ void WordsHandler::setup(int width, int height)
   setupPixels();
 }
 
+
+bool checkDead(SingleWord &p){
+  return p.disappear <= 0;
+}
+
 void WordsHandler::draw()
 {
   mainFbo.begin();
   ofClear(0,255);
-  for(int a = 0; a < singleWords.size(); a++)
+  int totWords = singleWords.size();
+  for(int a = totWords - 1; a >= 0 ; a--)
   {
     singleWords[a].draw();
+    if(singleWords[a].disappear <= 0)
+    {
+      for(int y = singleWords[a].rect.y; y < singleWords[a].rect.y + singleWords[a].rect.height; y++)
+      {
+        for(int x = singleWords[a].rect.x; x < singleWords[a].rect.x + singleWords[a].rect.width; x++)
+        {
+          pixels.setColor(x, y, ofColor(255));
+        }
+      }
+    }
   }
+  ofRemove(singleWords, checkDead);
   mainFbo.end();
   mainFbo.draw(0,0);
 }
@@ -49,9 +66,11 @@ void WordsHandler::setupPixels()
 
 void WordsHandler::addNewWord(string newWord)
 {
+  float minute = 60*60;
   SingleWord tempWord;
   ofVec2f startPoint = getFirstPoint();
-  tempWord.setup(startPoint, ofToUpper(newWord));
+  float life = ofRandom(minute * lifeMinMinute, minute * lifeMaxMinute);
+  tempWord.setup(startPoint, ofToUpper(newWord), life);
   ofVec2f size = getNewWordSize(startPoint, tempWord);
   if(size.x != -666)
   {
@@ -166,4 +185,19 @@ ofVec2f WordsHandler::getFirstPoint()
       free = true;
   }
   return point;
+}
+
+ofParameterGroup* WordsHandler::getParameterGroup()
+{
+  if(!wordsParameterGroup)
+  {
+    wordsParameterGroup = new ofParameterGroup();
+  }
+  if(wordsParameterGroup->getName() == "")
+  {
+    wordsParameterGroup->setName("Words");
+    wordsParameterGroup->add(lifeMinMinute.set("Life min minute", 1, 1, 30));
+    wordsParameterGroup->add(lifeMaxMinute.set("Life max minute", 10, 1, 30));
+  }
+  return wordsParameterGroup;
 }

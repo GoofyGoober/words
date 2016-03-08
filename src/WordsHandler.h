@@ -19,8 +19,8 @@ public:
   void                setup(int width, int height);
   void                draw();
   void                addNewWord(string newWord = "cacca");
-   ofTrueTypeFont      font;
-  
+  ofTrueTypeFont      font;
+  ofParameterGroup*   getParameterGroup();
 private:
   void                setupPixels();
   ofVec2f             getFirstPoint();
@@ -38,6 +38,9 @@ private:
     return (value >= min) && (value <= max);
   }
   ofFbo mainFbo;
+  ofParameterGroup*   wordsParameterGroup;
+  ofParameter<float>  lifeMinMinute;
+  ofParameter<float>  lifeMaxMinute;
 };
 
 

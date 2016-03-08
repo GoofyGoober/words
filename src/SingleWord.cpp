@@ -15,29 +15,42 @@ SingleWord::SingleWord()
   
 }
 
-void  SingleWord::setup(ofVec2f startPoint, string word)
+void  SingleWord::setup(ofVec2f startPoint, string word, float life)
 {
   this->word = word;
 //  this->font = font;
   color = ofColor(ofRandom(100,240));
+  this->life = life;
+  disappear = 255;
 }
 
 void  SingleWord::draw()
 {
-  ofPushStyle();
-  ofPushMatrix();
-  ofTranslate(rect.x, rect.y);
-//  drawDebug();
-  ofSetColor(color,255);
-  ofPushMatrix();
-  ofTranslate(0, rect.height);
-  ofTranslate(-rect.width/100*1, -rect.height/100*1);
-  ofScale(scale, scale);
-  
-  ((ofApp*)ofGetAppPtr())->words.font.drawStringAsShapes(word, 0, 0);
-  ofPopMatrix();
-  ofPopMatrix();
-  ofPopStyle();
+  float alpha = 255;
+  life--;
+  if(life <= 0)
+  {
+    life = 0;
+    disappear--;
+    alpha = disappear;
+  }
+  if(alpha > 0)
+  {
+    ofPushStyle();
+    ofPushMatrix();
+    ofTranslate(rect.x, rect.y);
+    //  drawDebug();
+    ofSetColor(color,alpha);
+    ofPushMatrix();
+    ofTranslate(0, rect.height);
+    ofTranslate(-rect.width/100*1, -rect.height/100*1);
+    ofScale(scale, scale);
+    
+    ((ofApp*)ofGetAppPtr())->words.font.drawStringAsShapes(word, 0, 0);
+    ofPopMatrix();
+    ofPopMatrix();
+    ofPopStyle();
+  }
 }
 
 void SingleWord::drawDebug()

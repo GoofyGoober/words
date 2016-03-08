@@ -15,17 +15,20 @@ class SingleWord
 {
 public:
                         SingleWord();
-  void                  setup(ofVec2f startPoint, string word);
+  void                  setup(ofVec2f startPoint, string word, float life);
   void                  draw();
   void                  addVertex(ofVec2f startPoint, ofVec2f endPoint);
   
   float                 scale;
   string                word;
   ofRectangle           rect;
+  float                 disappear;
 private:
   void                  drawDebug();
   ofColor               color;
-//  ofTrueTypeFont*       font;
+  //  ofTrueTypeFont*       font;
+  long int              life;
+  
   
 };
 
