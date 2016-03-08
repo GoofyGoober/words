@@ -8,27 +8,36 @@
 
 #include "WordsHandler.h"
 
+
 WordsHandler::WordsHandler()
 {
-  marginFromBorder = 150;
-  marginFromWords = 1;
+  marginFromBorder  = 10;
+  marginFromWords   = 1;
   font.load("Impact.ttf", 200, true, true, true);
   
 }
 
-void  WordsHandler::setup(int width, int height)
+void WordsHandler::setup(int width, int height)
 {
   windowsSize.x = width;
   windowsSize.y = height;
+  mainFbo.allocate(width, height);
+  mainFbo.begin();
+  ofClear(0,255);
+  mainFbo.end();
   setupPixels();
 }
 
-void  WordsHandler::draw()
+void WordsHandler::draw()
 {
+  mainFbo.begin();
+  ofClear(0,255);
   for(int a = 0; a < singleWords.size(); a++)
   {
     singleWords[a].draw();
   }
+  mainFbo.end();
+  mainFbo.draw(0,0);
 }
 
 void WordsHandler::setupPixels()
@@ -38,11 +47,11 @@ void WordsHandler::setupPixels()
     pixels.setColor(a, ofColor(255));
 }
 
-void WordsHandler::addNewWord()
+void WordsHandler::addNewWord(string newWord)
 {
   SingleWord tempWord;
   ofVec2f startPoint = getFirstPoint();
-  tempWord.setup(startPoint, ofToUpper("xxx"), &font);
+  tempWord.setup(startPoint, ofToUpper(newWord));
   ofVec2f size = getNewWordSize(startPoint, tempWord);
   if(size.x != -666)
   {
@@ -64,13 +73,13 @@ void WordsHandler::addNewWord()
 
 ofVec2f WordsHandler::getNewWordSize(ofVec2f startPoint, SingleWord& singleWord)
 {
-  int newWwidth = ofRandom(windowsSize.x/2);
-  if(singleWords.size() > 20)
-    newWwidth = ofRandom(windowsSize.x/5);
+  int newWwidth = ofRandom(windowsSize.x/4);
   if(singleWords.size() > 40)
-    newWwidth = ofRandom(windowsSize.x/10);
-  if(singleWords.size() > 60)
-    newWwidth = ofRandom(windowsSize.x/20);
+    newWwidth = ofRandom(windowsSize.x/6);
+  if(singleWords.size() > 90)
+    newWwidth = ofRandom(windowsSize.x/8);
+  if(singleWords.size() > 120)
+    newWwidth = ofRandom(windowsSize.x/16);
   if(newWwidth > windowsSize.x - marginFromBorder)
     newWwidth = windowsSize.x - marginFromBorder;
   ofRectangle box = font.getStringBoundingBox(singleWord.word, 0, 0);

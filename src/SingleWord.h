@@ -14,17 +14,18 @@
 class SingleWord
 {
 public:
-              SingleWord();
-  void        setup(ofVec2f startPoint, string word, ofTrueTypeFont* font);
-  void        draw();
-  void        addVertex(ofVec2f startPoint, ofVec2f endPoint);
+                        SingleWord();
+  void                  setup(ofVec2f startPoint, string word);
+  void                  draw();
+  void                  addVertex(ofVec2f startPoint, ofVec2f endPoint);
   
-  float       scale;
-  string      word;
-  ofRectangle rect;
+  float                 scale;
+  string                word;
+  ofRectangle           rect;
 private:
-  ofColor             color;
-  ofTrueTypeFont*      font;
+  void                  drawDebug();
+  ofColor               color;
+//  ofTrueTypeFont*       font;
   
 };
 

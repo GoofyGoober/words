@@ -7,6 +7,7 @@
 //
 
 #include "SingleWord.h"
+#include "ofApp.h"
 
 
 SingleWord::SingleWord()
@@ -14,11 +15,11 @@ SingleWord::SingleWord()
   
 }
 
-void  SingleWord::setup(ofVec2f startPoint, string word, ofTrueTypeFont* font)
+void  SingleWord::setup(ofVec2f startPoint, string word)
 {
   this->word = word;
-  this->font = font;
-  color = ofColor(ofRandom(100,240nnnn));
+//  this->font = font;
+  color = ofColor(ofRandom(100,240));
 }
 
 void  SingleWord::draw()
@@ -26,18 +27,24 @@ void  SingleWord::draw()
   ofPushStyle();
   ofPushMatrix();
   ofTranslate(rect.x, rect.y);
-//  ofFill();
-//  ofSetColor(200, 100);
-//  ofDrawRectangle(0,0,rect.width, rect.height);
+//  drawDebug();
   ofSetColor(color,255);
   ofPushMatrix();
   ofTranslate(0, rect.height);
   ofTranslate(-rect.width/100*1, -rect.height/100*1);
   ofScale(scale, scale);
-  font->drawString(word, 0, 0);
+  
+  ((ofApp*)ofGetAppPtr())->words.font.drawStringAsShapes(word, 0, 0);
   ofPopMatrix();
   ofPopMatrix();
   ofPopStyle();
+}
+
+void SingleWord::drawDebug()
+{
+  ofFill();
+  ofSetColor(200, 100);
+  ofDrawRectangle(0,0,rect.width, rect.height);
 }
 
 void SingleWord::addVertex(ofVec2f startPoint, ofVec2f endPoint)

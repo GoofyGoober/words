@@ -18,7 +18,8 @@ public:
                       WordsHandler();
   void                setup(int width, int height);
   void                draw();
-  void                addNewWord();
+  void                addNewWord(string newWord = "cacca");
+   ofTrueTypeFont      font;
   
 private:
   void                setupPixels();
@@ -30,13 +31,15 @@ private:
   ofVec2f             windowsSize;
   float               marginFromBorder;
   float               marginFromWords;
-  ofTrueTypeFont      font;
   int                 contains(ofRectangle& R1, ofRectangle& R2);
   ofRectangle         checkIfFree(ofRectangle& rect);
   bool valueInRange(int value, int min, int max)
   {
     return (value >= min) && (value <= max);
   }
+  ofFbo mainFbo;
 };
+
+
 
 #endif /* defined(__words__WordsHandler__) */
