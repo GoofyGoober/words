@@ -23,11 +23,11 @@ public:
   string                word;
   ofRectangle           rect;
   float                 disappear;
+  float                 disapperSpeed;
+  long int              life;
 private:
   void                  drawDebug();
   ofColor               color;
-  //  ofTrueTypeFont*       font;
-  long int              life;
   
   
 };

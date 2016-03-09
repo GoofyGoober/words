@@ -21,6 +21,7 @@ public:
   void                addNewWord(string newWord = "cacca");
   ofTrueTypeFont      font;
   ofParameterGroup*   getParameterGroup();
+  void                frameRateTooLow();
 private:
   void                setupPixels();
   ofVec2f             getFirstPoint();

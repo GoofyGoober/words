@@ -205,8 +205,17 @@ ofParameterGroup* WordsHandler::getParameterGroup()
   if(wordsParameterGroup->getName() == "")
   {
     wordsParameterGroup->setName("Words");
-    wordsParameterGroup->add(lifeMinMinute.set("Life min minute", 1, 1, 30));
-    wordsParameterGroup->add(lifeMaxMinute.set("Life max minute", 10, 1, 30));
+    wordsParameterGroup->add(lifeMinMinute.set("Life min minute", 1, 1, 5));
+    wordsParameterGroup->add(lifeMaxMinute.set("Life max minute", 10, 1, 10));
   }
   return wordsParameterGroup;
+}
+
+void WordsHandler::frameRateTooLow()
+{
+  if(singleWords.size() > 0)
+  {
+    singleWords[0].disapperSpeed = 30;
+    singleWords[0].life = 0;
+  }
 }

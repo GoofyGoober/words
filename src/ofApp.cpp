@@ -17,6 +17,7 @@ void ofApp::setup(){
   setupGui();
   ofSetWindowPosition(3000, 0);
   ofToggleFullscreen();
+  ofSetLogLevel(OF_LOG_SILENT);
 }
 
 void ofApp::setupAudio()
@@ -42,6 +43,7 @@ void ofApp::setupGui()
   gui.add(screamForClean.set("Scream For Clean", true));
   gui.add(scaledVolumeLimitScremForClean .set("Scaled Volume Limit", 1, 0, 3));
   gui.add(speedDisappear.set("Speed Disappear", 0.0001, 0.0000, .0500));
+  gui.add(limitFramerate .set("Limit framerate", 15, 10, 60));
   gui.add(*words.getParameterGroup());
   gui.loadFromFile("settings.xml");
 }
@@ -65,6 +67,10 @@ void ofApp::setupWebSocket()
 void ofApp::update(){
   blur.setRotation(PI);
   updateAudio();
+  if(ofGetFrameRate() < limitFramerate)
+  {
+    words.frameRateTooLow();
+  }
   if(!screamForClean)
     blurValue = scaledVol * blurMultiplier;
   else
@@ -80,7 +86,6 @@ void ofApp::update(){
     }
   }
   blurValue = ofClamp(blurValue, 0, 5);
-  
   blur.setScale(blurValue);
 }
 
@@ -126,33 +131,35 @@ void ofApp::keyPressed(int key){
 }
 
 void ofApp::onConnect( ofxLibwebsockets::Event& args ){
-  cout<<"on connected"<<endl;
+  ofLog()<<"on connected"<<endl;
 }
 
 //--------------------------------------------------------------
 void ofApp::onOpen( ofxLibwebsockets::Event& args ){
-  cout<<"new connection open"<<endl;
+  ofLog()<<"new connection open"<<endl;
   messages.push_back("New connection from " + args.conn.getClientIP() + ", " + args.conn.getClientName() );
 }
 
 //--------------------------------------------------------------
 void ofApp::onClose( ofxLibwebsockets::Event& args ){
-  cout<<"on close"<<endl;
+  ofLog()<<"on close"<<endl;
   messages.push_back("Connection closed");
 }
 
 //--------------------------------------------------------------
 void ofApp::onIdle( ofxLibwebsockets::Event& args ){
-  cout<<"on idle"<<endl;
+  ofLog()<<"on idle"<<endl;
 }
 
 //--------------------------------------------------------------
 void ofApp::onMessage( ofxLibwebsockets::Event& args )
 {
-  cout<<"got message "<<args.message<<endl;
+  ofLog()<<"got message "<<args.message<<endl;
   vector<string> strings = ofSplitString(args.message, " ");
   for(int a = 0; a < strings.size(); a++)
   {
+    if(a > 100)
+      return;
     bool found = false;
     if(!duplicateWords)
     {
@@ -205,5 +212,5 @@ void ofApp::audioIn(float * input, int bufferSize, int nChannels)
 
 //--------------------------------------------------------------
 void ofApp::onBroadcast( ofxLibwebsockets::Event& args ){
-  cout<<"got broadcast "<<args.message<<endl;
+  ofLog()<<"got broadcast "<<args.message<<endl;
 }

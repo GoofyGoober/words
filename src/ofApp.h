@@ -47,6 +47,7 @@ public:
   ofParameter<bool>         screamForClean;
   ofParameter<float>        scaledVolumeLimitScremForClean;
   ofParameter<float>        speedDisappear;
+  ofParameter<float>        limitFramerate;
   ofxPanel                  gui;
   bool                      showGUI;
   ofParameter<float>        blurValue;

@@ -22,6 +22,7 @@ void  SingleWord::setup(ofVec2f startPoint, string word, float life)
   color = ofColor(ofRandom(100,240));
   this->life = life;
   disappear = 255;
+  disapperSpeed = 1;
 }
 
 void  SingleWord::draw()
@@ -31,7 +32,7 @@ void  SingleWord::draw()
   if(life <= 0)
   {
     life = 0;
-    disappear--;
+    disappear -= disapperSpeed;
     alpha = disappear;
   }
   if(alpha > 0)
