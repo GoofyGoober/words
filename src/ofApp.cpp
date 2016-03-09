@@ -158,13 +158,13 @@ void ofApp::onMessage( ofxLibwebsockets::Event& args )
     {
       for(int i = 0; i < foundWords.size(); i++)
       {
-        if(strings[a] == foundWords[i])
+        if(ofToUpper(strings[a]) == ofToUpper(foundWords[i]))
           found = true;
       }
     }
     if(!found)
     {
-      foundWords.push_back(strings[a]);
+      foundWords.push_back(ofToUpper(strings[a]));
       words.addNewWord(strings[a]);
     }
   }

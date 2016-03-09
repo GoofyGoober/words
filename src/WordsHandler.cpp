@@ -7,6 +7,7 @@
 //
 
 #include "WordsHandler.h"
+#include "ofApp.h"
 
 
 WordsHandler::WordsHandler()
@@ -43,6 +44,14 @@ void WordsHandler::draw()
     singleWords[a].draw();
     if(singleWords[a].disappear <= 0)
     {
+      int wordsDuplicatedTot = ((ofApp*)ofGetAppPtr())->foundWords.size();
+      for(int i = wordsDuplicatedTot - 1; i >= 0; i--)
+      {
+        if(singleWords[a].word == ((ofApp*)ofGetAppPtr())->foundWords[i])
+        {
+          ((ofApp*)ofGetAppPtr())->foundWords.erase(((ofApp*)ofGetAppPtr())->foundWords.begin()+i);
+        }
+      }
       for(int y = singleWords[a].rect.y; y < singleWords[a].rect.y + singleWords[a].rect.height; y++)
       {
         for(int x = singleWords[a].rect.x; x < singleWords[a].rect.x + singleWords[a].rect.width; x++)
