@@ -27,6 +27,7 @@ void WordsHandler::setup(int width, int height)
   ofClear(0,255);
   mainFbo.end();
   setupPixels();
+  timerNoWords = 0;
 }
 
 
@@ -64,6 +65,27 @@ void WordsHandler::draw()
   ofRemove(singleWords, checkDead);
   mainFbo.end();
   mainFbo.draw(0,0);
+  
+  if(singleWords.size() <= 0)
+    timerNoWords++;
+  int frameRate = ofGetFrameRate();
+  if(frameRate < 10)
+    frameRate = 60;
+  float minute = frameRate * 60;
+  if(timerNoWords >= minute*1 && singleWords.size() == 0)
+  {
+    timerNoWords = 0;
+    for(int a = 0; a < 25; a++)
+    {
+      addNewWord("raccontami");
+      addNewWord("non");
+      addNewWord("ti");
+      addNewWord("giudico");
+      addNewWord("parlami");
+      addNewWord("ti");
+      addNewWord("prego");
+    }
+  }
 }
 
 void WordsHandler::setupPixels()
@@ -95,6 +117,7 @@ void WordsHandler::addNewWord(string newWord)
         pixels.setColor(x, y, ofColor(0));
       }
     }
+    timerNoWords = 0;
     singleWords.push_back(tempWord);
   }
 }
@@ -213,8 +236,9 @@ ofParameterGroup* WordsHandler::getParameterGroup()
 
 void WordsHandler::frameRateTooLow()
 {
-  if(singleWords.size() > 0)
+  if(singleWords.size() > 20)
   {
+    cout << "SIZE = " << singleWords.size() << endl;
     singleWords[0].disapperSpeed = 30;
     singleWords[0].life = 0;
   }

@@ -36,7 +36,7 @@ void ofApp::setupAudio()
 
 void ofApp::setupGui()
 {
-  showGUI = true;
+  showGUI = false;
   gui.setup();
   gui.add(duplicateWords.set("Duplicate words", false));
   gui.add(blurMultiplier.set("Blur multiplier", 10, 1, 20));
@@ -158,8 +158,8 @@ void ofApp::onMessage( ofxLibwebsockets::Event& args )
   vector<string> strings = ofSplitString(args.message, " ");
   for(int a = 0; a < strings.size(); a++)
   {
-    if(a > 100)
-      return;
+//    if(a > 100)
+//      return;
     bool found = false;
     if(!duplicateWords)
     {

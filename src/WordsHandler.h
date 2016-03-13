@@ -22,12 +22,12 @@ public:
   ofTrueTypeFont      font;
   ofParameterGroup*   getParameterGroup();
   void                frameRateTooLow();
+  vector<SingleWord>  singleWords;
 private:
   void                setupPixels();
   ofVec2f             getFirstPoint();
   ofVec2f             getNewWordSize(ofVec2f startPoint, SingleWord& singleWord);
   ofPixels            pixels;
-  vector<SingleWord>  singleWords;
   ofImage             debugImage;
   ofVec2f             windowsSize;
   float               marginFromBorder;
@@ -42,6 +42,7 @@ private:
   ofParameterGroup*   wordsParameterGroup;
   ofParameter<float>  lifeMinMinute;
   ofParameter<float>  lifeMaxMinute;
+  int                 timerNoWords;
 };
 
 
