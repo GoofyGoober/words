@@ -22,13 +22,13 @@ void  SingleWord::setup(ofVec2f startPoint, string word, float life)
   color = ofColor(ofRandom(100,240));
   this->life = life;
   disappear = 255;
-  disapperSpeed = 10;
+  disapperSpeed = 1;
 }
 
 void  SingleWord::draw()
 {
   float alpha = 255;
-  life-=10;
+  life-=1;
   if(((ofApp*)ofGetAppPtr())->words.singleWords.size() > 80 && ofGetFrameRate() < 15)
   {
     life -= 20;
