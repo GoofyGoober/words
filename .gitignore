@@ -103,17 +103,6 @@ Desktop.ini
 # miscellaneous
 #########################
 
-.mailmap
-
-*.pbxproj
-
-*.xcscheme
-
-*.plist
-
-*.xcconfig
-
-*.make
 
 bin/data/.gitkeep
 
