@@ -2,9 +2,8 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-  ofVec2f windowsSize;
-  windowsSize.x = 1920;
-  windowsSize.y = 1080;
+  windowsSize.x = 2560; //ofGetScreenWidth();
+  windowsSize.y = 1440; //ofGetScreenHeight();
   words.setup(windowsSize.x, windowsSize.y);
   ofSetWindowShape(windowsSize.x, windowsSize.y);
   ofSetFrameRate(60);
@@ -12,7 +11,7 @@ void ofApp::setup(){
   setupWebSocket();
   resetWords();
   overlay.load("overlayWords.png");
-  blur.setup(1920, 1080, 10, .2, 4);
+  blur.setup(windowsSize.x, windowsSize.y, 10, .2, 4);
   setupAudio();
   setupGui();
   ofSetWindowPosition(3000, 0);
@@ -68,9 +67,8 @@ void ofApp::update(){
   blur.setRotation(PI);
   updateAudio();
   if(ofGetFrameRate() < limitFramerate)
-  {
     words.frameRateTooLow();
-  }
+
   if(!screamForClean)
     blurValue = scaledVol * blurMultiplier;
   else
@@ -81,7 +79,6 @@ void ofApp::update(){
     }
     else
     {
-      cout << "qui" << endl;
       blurValue -= .1;
     }
   }
@@ -111,11 +108,13 @@ void ofApp::draw(){
   blur.draw();
 
   ofPushStyle();
-  overlay.draw(0,0, 1920, 1080);
+  ofSetColor(255,100);
+  overlay.draw(0,0, windowsSize.x, windowsSize.y);
   ofPopStyle();
   if(showGUI)
   {
     ofDrawBitmapString(ofToString(ofGetFrameRate()), ofGetWindowWidth() - 60, 20);
+    ofDrawBitmapString(ofToString(words.singleWords.size()), ofGetWindowWidth() - 40, 40);
     gui.draw();
   }
 }

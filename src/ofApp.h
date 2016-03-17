@@ -51,4 +51,5 @@ public:
   ofxPanel                  gui;
   bool                      showGUI;
   ofParameter<float>        blurValue;
+  ofVec2f                   windowsSize;
 };
