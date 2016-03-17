@@ -22,6 +22,7 @@ public:
   ofTrueTypeFont      font;
   ofParameterGroup*   getParameterGroup();
   void                frameRateTooLow();
+  int                 getStartRectSize();
   vector<SingleWord>  singleWords;
 private:
   void                setupPixels();
@@ -42,6 +43,7 @@ private:
   ofParameterGroup*   wordsParameterGroup;
   ofParameter<float>  lifeMinMinute;
   ofParameter<float>  lifeMaxMinute;
+  ofParameter<float>  minWordSize;
   int                 timerNoWords;
 };
 
