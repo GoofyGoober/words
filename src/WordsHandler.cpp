@@ -233,7 +233,7 @@ int WordsHandler::getStartRectSize()
   return newWidth;
 }
 
-bool WordsHandler::underMaxWords()
+bool WordsHandler::underMaxWords()
 {
   return (((ofApp*)ofGetAppPtr())->words.singleWords.size() < maxWords);
 }
