@@ -19,23 +19,21 @@ void  SingleWord::setup(ofVec2f startPoint, string word, float life)
 {
   this->word = word;
 //  this->font = font;
-  color = ofColor(ofRandom(10,240));
+  color = ofColor(ofRandom(100,240));
   this->life = life;
   disappear = 255;
-  disapperSpeed = 1;
+  disapperSpeed = 10;
 }
 
 void  SingleWord::draw()
 {
   float alpha = 255;
-  life-=1;
-  disapperSpeed = 1;
-  if(!((ofApp*)ofGetAppPtr())->words.underMaxWords() || ofGetFrameRate() < 15)
+  life-=10;
+  if(((ofApp*)ofGetAppPtr())->words.singleWords.size() > 80 && ofGetFrameRate() < 15)
   {
     life -= 20;
-    disapperSpeed = 5;
+    disapperSpeed = 50;
   }
-
   if(life <= 0)
   {
     life = 0;
@@ -49,7 +47,6 @@ void  SingleWord::draw()
     ofTranslate(rect.x, rect.y);
     //  drawDebug();
     ofSetColor(color,alpha);
-    
     ofPushMatrix();
     ofTranslate(0, rect.height);
     ofTranslate(-rect.width/100*1, -rect.height/100*1);

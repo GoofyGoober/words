@@ -5,7 +5,6 @@
 #include "ofxLibwebsockets.h"
 #include "ofxBlur.h"
 #include "ofxGui.h"
-#include "ofxSyphon.h"
 
 class ofApp : public ofBaseApp{ 
 
@@ -16,7 +15,7 @@ public:
   void                      resetWords();
   void                      keyPressed(int key);
   void                      setupWebSocket();
-  void                      setupGui(bool showSizeAndPos = true);
+  void                      setupGui();
   void                      onConnect( ofxLibwebsockets::Event& args );
   void                      onOpen( ofxLibwebsockets::Event& args );
   void                      onClose( ofxLibwebsockets::Event& args );
@@ -52,12 +51,4 @@ public:
   ofxPanel                  gui;
   bool                      showGUI;
   ofParameter<float>        blurValue;
-  ofVec2f                   windowsSize;
-  
-  ofParameter<ofVec2f>      size;
-  ofParameter<ofVec2f>      pos;
-  void                      setupWords();
-  bool                      wordReady;
-  bool                      guiReady;
-  ofxSyphonServer           syphonOut;
 };

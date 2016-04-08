@@ -124,16 +124,20 @@ void WordsHandler::addNewWord(string newWord)
 
 ofVec2f WordsHandler::getNewWordSize(ofVec2f startPoint, SingleWord& singleWord)
 {
-  int newWwidth = getStartRectSize();
-  
+  int newWwidth = ofRandom(windowsSize.x/4);
+  if(singleWords.size() > 40)
+    newWwidth = ofRandom(windowsSize.x/6);
+  if(singleWords.size() > 90)
+    newWwidth = ofRandom(windowsSize.x/8);
+  if(singleWords.size() > 120)
+    newWwidth = ofRandom(windowsSize.x/16);
+  if(newWwidth > windowsSize.x - marginFromBorder)
+    newWwidth = windowsSize.x - marginFromBorder;
   ofRectangle box = font.getStringBoundingBox(singleWord.word, 0, 0);
   float prop = float(box.width/box.height);
   int newHeight = newWwidth/prop;
   ofRectangle tempRect = ofRectangle(startPoint.x, startPoint.y, newWwidth, newHeight);
   ofRectangle newRect = checkIfFree(tempRect);
-  if(newRect.width < windowsSize.x / 100 * minWordSize)
-    return ofVec2f(-666);
-    
   if(newRect.x == -666)
   {
     return ofVec2f(-666);
@@ -144,10 +148,6 @@ ofVec2f WordsHandler::getNewWordSize(ofVec2f startPoint, SingleWord& singleWord)
     if(newRect.x + newRect.width > windowsSize.x - marginFromBorder)
       newWwidth = windowsSize.x - marginFromBorder - newRect.x;
     newHeight = newWwidth/prop;
-    // Controllare se con l'altezza non esco dallo spazio
-    if(newHeight + startPoint.y > windowsSize.y - marginFromBorder)
-      newHeight = windowsSize.y - marginFromBorder - startPoint.y;
-    newWwidth = newHeight*prop;
     singleWord.scale = float(newWwidth/box.width);
     ofVec2f newRectSize = ofVec2f(newWwidth, newHeight);
     return newRectSize;
@@ -219,25 +219,6 @@ ofVec2f WordsHandler::getFirstPoint()
   return point;
 }
 
-int WordsHandler::getStartRectSize()
-{
-  int newWidth  = ofRandom(windowsSize.x / 100 * minWordSize, windowsSize.x/4);
-  if(singleWords.size() > 40)
-    newWidth = ofRandom((windowsSize.x / 100 * minWordSize)/2, windowsSize.x/6);
-  if(singleWords.size() > 90)
-    newWidth = ofRandom((windowsSize.x / 100 * minWordSize)/4, windowsSize.x/8);
-  if(singleWords.size() > 120)
-    newWidth = ofRandom((windowsSize.x / 100 * minWordSize)/6, windowsSize.x/16);
-  if(newWidth > windowsSize.x - marginFromBorder)
-    newWidth = windowsSize.x - marginFromBorder;
-  return newWidth;
-}
-
-bool WordsHandler::underMaxWords()
-{
-  return (((ofApp*)ofGetAppPtr())->words.singleWords.size() < maxWords);
-}
-
 ofParameterGroup* WordsHandler::getParameterGroup()
 {
   if(!wordsParameterGroup)
@@ -247,10 +228,8 @@ ofParameterGroup* WordsHandler::getParameterGroup()
   if(wordsParameterGroup->getName() == "")
   {
     wordsParameterGroup->setName("Words");
-    wordsParameterGroup->add(lifeMinMinute.set("Life min minute", .1, 0, 5));
-    wordsParameterGroup->add(lifeMaxMinute.set("Life max minute", 2, 0, 10));
-    wordsParameterGroup->add(minWordSize.set("Min Word Size Perc", 50, 0, 100));
-    wordsParameterGroup->add(maxWords.set("Max Words", 80, 0, 1000));
+    wordsParameterGroup->add(lifeMinMinute.set("Life min minute", 1, 1, 5));
+    wordsParameterGroup->add(lifeMaxMinute.set("Life max minute", 10, 1, 10));
   }
   return wordsParameterGroup;
 }
@@ -259,6 +238,7 @@ void WordsHandler::frameRateTooLow()
 {
   if(singleWords.size() > 20)
   {
+    cout << "SIZE = " << singleWords.size() << endl;
     singleWords[0].disapperSpeed = 30;
     singleWords[0].life = 0;
   }

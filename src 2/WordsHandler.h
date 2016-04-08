@@ -22,9 +22,7 @@ public:
   ofTrueTypeFont      font;
   ofParameterGroup*   getParameterGroup();
   void                frameRateTooLow();
-  int                 getStartRectSize();
   vector<SingleWord>  singleWords;
-  bool                underMaxWords();
 private:
   void                setupPixels();
   ofVec2f             getFirstPoint();
@@ -44,8 +42,6 @@ private:
   ofParameterGroup*   wordsParameterGroup;
   ofParameter<float>  lifeMinMinute;
   ofParameter<float>  lifeMaxMinute;
-  ofParameter<float>  minWordSize;
-  ofParameter<int>    maxWords;
   int                 timerNoWords;
 };
 

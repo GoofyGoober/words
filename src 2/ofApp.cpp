@@ -2,26 +2,26 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-  ofSetLogLevel(OF_LOG_SILENT);
-  wordReady = false;
-  guiReady  = false;
-  syphonOut.setName("Parole parole parole");
-}
-
-void ofApp::setupWords()
-{
-  wordReady = true;
-  windowsSize.x = size->x * ofGetWindowWidth();
-  windowsSize.y = size->y * ofGetWindowHeight();
+  ofVec2f windowsSize;
+  windowsSize.x = 1920;
+  windowsSize.y = 1080;
   words.setup(windowsSize.x, windowsSize.y);
+  ofSetWindowShape(windowsSize.x, windowsSize.y);
   ofSetFrameRate(60);
   ofBackground(0);
   setupWebSocket();
+  system("open 'http://localhost:9092/'");
   resetWords();
   overlay.load("overlayWords.png");
-  blur.setup(windowsSize.x, windowsSize.y, 10, .2, 4);
+  blur.setup(1920, 1080, 10, .2, 4);
   setupAudio();
-  system("open 'http://localhost:9092/'");
+  setupGui();
+  ofSetWindowPosition(3000, 0);
+  ofToggleFullscreen();
+  ofSetLogLevel(OF_LOG_SILENT);
+//  cout << system("bash ../../../data/runServer.sh") << endl;;
+//  cout << system("bash openPage.sh") << endl;;
+  
 }
 
 void ofApp::setupAudio()
@@ -38,27 +38,17 @@ void ofApp::setupAudio()
   soundStream.setup(this, 0, 2, 44100, bufferSize, 4);
 }
 
-void ofApp::setupGui(bool showSizeAndPos)
+void ofApp::setupGui()
 {
   showGUI = false;
-  gui.clear();
   gui.setup();
-  scaledVolumeLimitScremForClean = 1;
-  duplicateWords = false;
-  blurMultiplier = 10;
-//  gui.add(duplicateWords.set("Duplicate words", false));
-//  gui.add(blurMultiplier.set("Blur multiplier", 10, 1, 20));
+  gui.add(duplicateWords.set("Duplicate words", false));
+  gui.add(blurMultiplier.set("Blur multiplier", 10, 1, 20));
   gui.add(screamForClean.set("Scream For Clean", true));
-//  gui.add(scaledVolumeLimitScremForClean .set("Scaled Volume Limit", 1, 0, 3));
-  gui.add(speedDisappear.set("Speed Blur Disappear", 0.0001, 0.0000, .0500));
+  gui.add(scaledVolumeLimitScremForClean .set("Scaled Volume Limit", 1, 0, 3));
+  gui.add(speedDisappear.set("Speed Disappear", 0.0001, 0.0000, .0500));
   gui.add(limitFramerate .set("Limit framerate", 15, 10, 60));
-  if(showSizeAndPos)
-  {
-    gui.add(size.set("size", ofVec2f(.5), ofVec2f(0), ofVec2f(1)));
-    gui.add(pos.set("pos", ofVec2f(0), ofVec2f(0), ofVec2f(2000,2000)));
-  }
   gui.add(*words.getParameterGroup());
-  gui.setPosition(ofPoint(0,ofGetWindowHeight()-400));
   gui.loadFromFile("settings.xml");
 }
 
@@ -82,8 +72,9 @@ void ofApp::update(){
   blur.setRotation(PI);
   updateAudio();
   if(ofGetFrameRate() < limitFramerate)
+  {
     words.frameRateTooLow();
-
+  }
   if(!screamForClean)
     blurValue = scaledVol * blurMultiplier;
   else
@@ -94,6 +85,7 @@ void ofApp::update(){
     }
     else
     {
+      cout << "qui" << endl;
       blurValue -= .1;
     }
   }
@@ -114,37 +106,20 @@ void ofApp::updateAudio()
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-  ofBackground(0);  
-  if(wordReady)
-  {
-    
-    blur.begin();
-    ofSetColor(255);
-    words.draw();
-    blur.end();
-    ofPushMatrix();
-    ofTranslate(pos->x, pos->y);
-    blur.draw();
-    
-    ofPushStyle();
-    ofSetColor(255,255);
-//    cout << windowsSize.x << " AND = " << windowsSize.y << endl;
-    overlay.draw(0,0, windowsSize.x, windowsSize.y);
-    ofPopStyle();
-    ofPopMatrix();
-    syphonOut.publishScreen();
-  }
-  else
-  {
-    ofPushStyle();
-    ofSetColor(255,255,0,100);
-    ofDrawRectangle(pos->x, pos->y, size->x * ofGetWindowWidth(), size->y * ofGetWindowHeight());
-    ofPopStyle();
-  }
+  ofBackground(0);
+  blur.begin();
+  ofSetColor(255);
+  words.draw();
+  blur.end();
+  
+  blur.draw();
+
+  ofPushStyle();
+  overlay.draw(0,0, 1920, 1080);
+  ofPopStyle();
   if(showGUI)
   {
     ofDrawBitmapString(ofToString(ofGetFrameRate()), ofGetWindowWidth() - 60, 20);
-    ofDrawBitmapString(ofToString(words.singleWords.size()), ofGetWindowWidth() - 40, 40);
     gui.draw();
   }
 }
@@ -155,17 +130,8 @@ void ofApp::keyPressed(int key){
     words.addNewWord();
   if(key == 'g')
     showGUI = !showGUI;
-  if(key == 'f' && !guiReady)
-  {
-    guiReady = true;
+  if(key == 'f')
     ofToggleFullscreen();
-    setupGui();
-  }
-  if(key == 's'&&!wordReady)
-  {
-    setupWords();
-    setupGui(false);
-  }
 }
 
 void ofApp::onConnect( ofxLibwebsockets::Event& args ){
@@ -210,8 +176,7 @@ void ofApp::onMessage( ofxLibwebsockets::Event& args )
     if(!found)
     {
       foundWords.push_back(ofToUpper(strings[a]));
-      for(int i = 0; i < 5; i++)
-        words.addNewWord(strings[a]);
+      words.addNewWord(strings[a]);
     }
   }
   // trace out string messages or JSON messages!
