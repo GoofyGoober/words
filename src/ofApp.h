@@ -53,7 +53,6 @@ public:
   bool                      showGUI;
   ofParameter<float>        blurValue;
   ofVec2f                   windowsSize;
-  
   ofParameter<ofVec2f>      size;
   ofParameter<ofVec2f>      pos;
   void                      setupWords();
